@@ -51,7 +51,7 @@ nohup.out
 !/app/webFrontend/*.js
 !/.travis/*.js
 !/api/test/mocha.env.js
-!/gulpfile.js
+!/.github/gulpfile.js
 
 # Ignore CSV-Files generated from nlf
 /**/nlf-license*.csv
