@@ -2,9 +2,18 @@
 const gulp = require("gulp");
 const git = require("gulp-git");
 const sget = require("simple-get");
+const semver = require("semver");
+const userName = require("git-user-name");
+const readline = require("readline");
+const fs = require("fs");
 
 const RELEASE = "release";
 const BUMP = "bump";
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 const versionFiles = [
   "../api/package.json",
@@ -18,46 +27,56 @@ gulp.task(RELEASE, function () {
 });
 
 gulp.task(BUMP, function () {
-  git
-    .status({args: '--porcelain'}, errFnc(err))
-    .checkout('develop', errFnc(err))
-    .pull()
-    .checkout('vbump/local', {args: '-b'}, errFnc(err))
-  ;
+  const pkg = JSON.parse(fs.readFileSynch(versionFiles[0]));
+  const ghUser = userName();
 
-  gulp
-    .src(versionFiles)
-    .pipe(bump({type: 'minor'})) // FIXME
-    // .dest('.')
-    .pipe(git.add(errFnc(err)))
-    .pipe(git.commit('Bump version to xxx', errFnc(err))) // FIXME
+  rl.question('What type? [major|minor|patch|prerelease] ', function (answer) {
+    const newVersion = semver.inc(pkg.version, answer);
+    const branch = "vbump/" + newVersion;
+
+    git
+      .status({args: '--porcelain'}, errFnc(err))
+      .checkout('develop', errFnc(err))
+      .pull()
+      .checkout(branch, {args: '-b'}, errFnc(err))
     ;
 
-  git
-    .push('origin', errFnc(err))
-    .checkout('develop', errFnc(err))
-    .branch('vbump/local', {args: '--delete'}, errFnc(err))
-  ;
+    gulp
+      .src(versionFiles)
+      .pipe(bump({version: newVersion}))
+      // .dest('.')
+      .pipe(git.add(errFnc(err)))
+      .pipe(git.commit('Bump version to ' + newVersion, errFnc(err)))
+    ;
 
-  // TODO: Get user PW
+    git
+      .push('origin', errFnc(err))
+      .checkout('develop', errFnc(err))
+      .branch(branch, {args: '--delete'}, errFnc(err))
+    ;
 
-  const body = {
-    title: "Version Bump  xxx",
-    body: "Bumps version to xxx",
-    head: "vbump/local",
-    base: "develop",
-    headers: {
-      authorization: "Basic " + btoa("user" + ":" + "pw")
-    }
-  };
-  const opts = {
-    url: 'https://api.github.com/repos/h-da/geli/pulls',
-    method: 'post',
-    body: JSON.stringify(body)
-  };
-  sget.post(opts, function (err, res) {
-    if (err) throw err
+    rl.question('Your Github password: ', function (answer) {
+      if (!answer) return -1;
 
+      const body = {
+        title: "Version Bump " + newVersion,
+        body: "Bumps version to " + newVersion,
+        head: branch,
+        base: "develop",
+        headers: {
+          authorization: "Basic " + btoa(ghUser + ":" + answer)
+        }
+      };
+      const opts = {
+        url: 'https://api.github.com/repos/h-da/geli/pulls',
+        method: 'post',
+        body: JSON.stringify(body)
+      };
+      sget.post(opts, function (err, res) {
+        if (err) throw err
+
+      });
+    });
   });
 });
 
