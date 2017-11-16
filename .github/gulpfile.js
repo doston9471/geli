@@ -7,8 +7,8 @@ const RELEASE = "release";
 const BUMP = "bump";
 
 const versionFiles = [
-  "../api/paackage.json",
-  "../app/webFrontend/paackage.json"
+  "../api/package.json",
+  "../app/webFrontend/package.json"
 ];
 
 gulp.task(RELEASE, function () {
