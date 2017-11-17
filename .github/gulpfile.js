@@ -21,38 +21,39 @@ const versionFiles = [
 ];
 
 gulp.task(RELEASE, function () {
-  return gulp.src()
-    .pipe()
-    .pipe();
+  rl.print('NOT IMPLEMENTED YET');
+  console.error('NOT IMPLEMENTED YET');
 });
 
 gulp.task(BUMP, function () {
   const pkg = JSON.parse(fs.readFileSynch(versionFiles[0]));
   const ghUser = userName();
 
-  rl.question('What type? [major|minor|patch|prerelease] ', function (answer) {
+  rl.question('What type? [major|minor|patch] ', function (answer) {
     const newVersion = semver.inc(pkg.version, answer);
     const branch = "vbump/" + newVersion;
 
+    rl.print('Will bump version from ' + pkg.version + ' to ' + newVersion);
+
     git
-      .status({args: '--porcelain'}, errFnc(err))
-      .checkout('develop', errFnc(err))
-      .pull()
-      .checkout(branch, {args: '-b'}, errFnc(err))
+      .status({args: '--porcelain'}, errFnc)
+      .checkout('develop', errFnc)
+      .pull(errFnc)
+      .checkout(branch, {args: '-b'}, errFnc)
     ;
 
     gulp
       .src(versionFiles)
       .pipe(bump({version: newVersion}))
       // .dest('.')
-      .pipe(git.add(errFnc(err)))
-      .pipe(git.commit('Bump version to ' + newVersion, errFnc(err)))
+      .pipe(git.add(errFnc))
+      .pipe(git.commit('Bump version to ' + newVersion, errFnc))
     ;
 
     git
-      .push('origin', errFnc(err))
-      .checkout('develop', errFnc(err))
-      .branch(branch, {args: '--delete'}, errFnc(err))
+      .push('origin', errFnc)
+      .checkout('develop', errFnc)
+      .branch(branch, {args: '--delete'}, errFnc)
     ;
 
     rl.question('Your Github password: ', function (answer) {
