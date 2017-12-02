@@ -1,22 +1,26 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {HttpModule} from '@angular/http';
-
 import {AppComponent} from './app.component';
-import {JwtHelper} from 'angular2-jwt';
-
+import {RavenErrorHandler} from './shared/services/raven-error-handler.service';
 import {UserService} from './shared/services/user.service';
 import {AuthenticationService} from './shared/services/authentication.service';
 import {AuthGuardService} from './shared/services/auth-guard.service';
 import {
-  CourseService, TaskService, UserDataService, LectureService,
-  UnitService, AboutDataService, FreeTextUnitService, CodeKataUnitService, APIInfoService
+  AboutDataService,
+  APIInfoService,
+  CodeKataUnitService,
+  CourseService,
+  FreeTextUnitService,
+  LectureService,
+  TaskService,
+  UnitService,
+  UserDataService
 } from './shared/services/data.service';
 import {BackendService} from './shared/services/backend.service';
-
 import {ShowProgressService} from './shared/services/show-progress.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CodeKataProgressService, ProgressService} from './shared/services/data/progress.service';
+import {ProgressService} from './shared/services/data/progress.service';
 import {MarkdownService} from './shared/services/markdown.service';
 import {AppRoutingModule} from './app-routing.module';
 import {StartModule} from './start/start.module';
@@ -25,11 +29,12 @@ import {UserModule} from './user/user.module';
 import {AuthModule} from './auth/auth.module';
 import {AboutModule} from './about/about.module';
 import {AdminModule} from './admin/admin.module';
-import {MATERIAL_COMPATIBILITY_MODE} from '@angular/material';
+import {ReportService} from './shared/services/data/report.service';
+import {TitleService} from './shared/services/title.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     AdminModule,
@@ -41,10 +46,9 @@ import {MATERIAL_COMPATIBILITY_MODE} from '@angular/material';
     UserModule,
     AuthModule,
     AboutModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [
-    {provide: MATERIAL_COMPATIBILITY_MODE, useValue: true},
     UserService,
     AuthenticationService,
     AboutDataService,
@@ -60,10 +64,15 @@ import {MATERIAL_COMPATIBILITY_MODE} from '@angular/material';
     ShowProgressService,
     MarkdownService,
     FreeTextUnitService,
-    JwtHelper,
     CodeKataUnitService,
-    CodeKataProgressService,
     APIInfoService,
+    ReportService,
+    TitleService,
+    RavenErrorHandler,
+    {
+      provide: ErrorHandler,
+      useExisting: RavenErrorHandler
+    },
   ],
   bootstrap: [AppComponent]
 })

@@ -2,11 +2,13 @@ import {NgModule} from '@angular/core';
 import {
   MatAutocompleteModule,
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule,
+  MatDatepickerModule,
   MatMenuModule,
+  MatNativeDateModule,
   MatProgressBarModule, MatRadioModule,
   MatSelectModule, MatSlideToggleModule,
   MatSnackBarModule, MatTabsModule,
-  MatToolbarModule, MatTooltipModule
+  MatToolbarModule, MatTooltipModule, MatExpansionModule,
 } from '@angular/material';
 
 @NgModule({
@@ -15,12 +17,15 @@ import {
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
+    MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
     MatMenuModule,
+    MatNativeDateModule,
     MatProgressBarModule,
     MatRadioModule,
     MatSelectModule,
@@ -28,19 +33,22 @@ import {
     MatSnackBarModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   exports: [
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
+    MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
     MatMenuModule,
+    MatNativeDateModule,
     MatProgressBarModule,
     MatRadioModule,
     MatSelectModule,
@@ -48,7 +56,7 @@ import {
     MatSnackBarModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
   ]
 })
 export class MaterialImportModule {
