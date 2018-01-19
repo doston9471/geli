@@ -4,4 +4,5 @@ export interface IFile {
   link: string;
   size: number;
   mimeType: string;
+  physicalPath: string;
 }

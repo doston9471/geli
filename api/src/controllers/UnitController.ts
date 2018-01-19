@@ -12,6 +12,8 @@ import {IUnit} from '../../../shared/models/units/IUnit';
 import {IFileUnit} from '../../../shared/models/units/IFileUnit';
 import {ValidationError} from 'mongoose';
 import config from '../config/main'
+import {File} from '../models/mediaManager/File';
+import {IFile} from '../../../shared/models/mediaManager/IFile';
 
 const multer = require('multer');
 
@@ -42,7 +44,7 @@ export class UnitController {
 
   @Authorized(['teacher', 'admin'])
   @Post('/')
-  addUnit(@UploadedFile('file', {options: uploadOptions}) file: any, @Body() data: any) {
+  async addUnit(@UploadedFile('file', {options: uploadOptions}) file: any, @Body() data: any) {
     if (file) {
       try {
         data = JSON.parse(data.data);
@@ -55,7 +57,7 @@ export class UnitController {
     this.checkPostParam(data, file);
 
     if (file) {
-      data.model = this.handleUploadedFile(file, data.model);
+      data.model = await this.handleUploadedFile(file, data.model);
     }
 
     return Unit.create(data.model)
@@ -157,12 +159,16 @@ export class UnitController {
     }
   }
 
-  private handleUploadedFile(file: any, unit: IFileUnit): IUnit {
+  private async handleUploadedFile(file: any, unit: IFileUnit): Promise<IUnit> {
     if (!unit.hasOwnProperty('files')) {
       unit.files = []
     }
 
-    unit.files.push({path: file.path, name: file.filename, alias: file.originalname, size: file.size});
+
+    const saveNewFile = await new File({physicalPath: file.path, link: file.filename, name: file.originalname, size: file.size}).save();
+    const newFileObj: IFile = <IFile>saveNewFile.toObject();
+
+    unit.files.push(newFileObj);
     return unit;
   }
 }

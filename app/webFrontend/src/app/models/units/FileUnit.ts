@@ -1,5 +1,5 @@
 import {IFileUnit} from '../../../../../../shared/models/units/IFileUnit';
-import {IFile} from '../../../../../../shared/models/IFile';
+import {IFile} from '../../../../../../shared/models/mediaManager/IFile';
 import {ICourse} from '../../../../../../shared/models/ICourse';
 
 export class FileUnit implements IFileUnit {
@@ -14,7 +14,7 @@ export class FileUnit implements IFileUnit {
   updatedAt: string;
   createdAt: string;
 
-  files: IFile[];
+  files: IFile[] = [];
   fileUnitType: string;
 
   constructor(_course: ICourse) {

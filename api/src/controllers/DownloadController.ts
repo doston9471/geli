@@ -71,7 +71,7 @@ export class DownloadController {
           fileUnit.files.forEach((file, index) => {
             if (unit.files.indexOf(index) > -1) {
               if ((file.size / 1024 ) > config.maxFileSize) {
-                localTooLargeFiles.push(file.path);
+                localTooLargeFiles.push(file.physicalPath);
               }
               localTotalSize += (file.size / 1024 );
             }
@@ -187,7 +187,7 @@ export class DownloadController {
               const fileUnit = <IFileUnit><any>localUnit;
               fileUnit.files.forEach((file, index) => {
                 if (unit.files.indexOf(index) > -1) {
-                  archive.file(file.path, {name: lecCounter + '_' + lcName + '/' + unitCounter + '_' + file.alias});
+                  archive.file(file.physicalPath, {name: lecCounter + '_' + lcName + '/' + unitCounter + '_' + file.name});
                 }
               });
             } else if (localUnit.__t === 'task') {

@@ -5,7 +5,6 @@ import * as fs from 'fs';
 const {promisify} = require('util');
 
 interface IFileModel extends IFile, mongoose.Document {
-  physicalPath: string;
 }
 
 const fileSchema = new mongoose.Schema({

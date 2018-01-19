@@ -6,6 +6,7 @@ export class File implements IFile {
   link: string;
   size: number;
   mimeType: string;
+  physicalPath: string;
 
   public File(file: IFile) {
     this._id = file._id;
@@ -13,5 +14,6 @@ export class File implements IFile {
     this.link = file.link;
     this.size = file.size;
     this.mimeType = file.mimeType;
+    this.physicalPath = file.physicalPath;
   }
 }
